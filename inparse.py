@@ -21,6 +21,29 @@ def get_inv():
 
   return inv
 
+def print_most_expensive_items(inv):
+  for itemtype in inv:
+    top5 = []
+    for item in inv[itemtype]:
+      if len(top5) < 1:
+        top5.append(item)
+      else:
+        # insert object in appropriate place to maintain sorted top list
+        # (this does not allow for price collisions)
+        for i in range(len(top5)-1, -1,-1):
+          if item['price'] > top5[i]['price']:
+            if i == 0:
+              top5.insert(i, item)
+            elif item['price'] < top5[i-1]['price']:
+              top5.insert(i, item)
+            elif item['price'] > top5[i-1]['price']:
+              pass
+    print("The top 5 items for " + itemtype +"s are:")
+    for i in range(5):
+      print(top5[i])
+
+
 if __name__ == "__main__":
   inv = get_inv()
-  print(inv)
+  print_most_expensive_items(inv)
+  
