@@ -21,7 +21,11 @@ def get_inv():
 
   return inv
 
+
 def print_most_expensive_items(inv):
+# expects data as formatted by get_inv()
+# outputs top 5 most expensive items in each category
+
   for itemtype in inv:
     top5 = []
     for item in inv[itemtype]:
@@ -38,12 +42,31 @@ def print_most_expensive_items(inv):
               top5.insert(i, item)
             elif item['price'] > top5[i-1]['price']:
               pass
-    print("The top 5 items for " + itemtype +"s are:")
+    print("\n\nThe top 5 items for " + itemtype +"s are:")
     for i in range(5):
       print(top5[i])
+
+
+def print_long_cds(cds):
+# expects cd-specific data from results of get_inv()
+# outputs object data for any cd whose total running time is > 1hr
+
+  maxtime = 3600
+  long_cds=[]
+  
+  for cd in cds:
+    total=0
+    for track in cd['tracks']:
+      total += track['seconds']
+    if total > maxtime:
+      long_cds.append(cd)
+
+  print("\n\nThe CDs with running times greater than 1 hour are:")
+  for cd in long_cds:
+    print(cd)
 
 
 if __name__ == "__main__":
   inv = get_inv()
   print_most_expensive_items(inv)
-  
+  print_long_cds(inv['cd'])
