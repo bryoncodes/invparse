@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import json
+import re
 
 def get_inv():
 # expects json-formatted data from stdin
@@ -89,8 +90,46 @@ def print_musical_authors(books, cds):
     print(i)
 
 
+def print_items_with_years(inv):
+# expects inventory object as provided by get_inv()
+# outputs any object with a year in its <chapter|title|track>
+# for this program, "year" is defined as any 4 digit number
+  
+  # regex for simple 4 digit number
+  pattern = re.compile('(?<!\d)\d{4}(?!\d)')
+  year_items=[]
+
+  # for each inventory item type...
+  for itemtype in inv:
+    # ... check all items of that type for regex matches on chapter|title|track
+    for item in inv[itemtype]:
+      if "title" in item and pattern.search(item['title']) is not None:
+        year_items.append(item)
+      elif "chapters" in item:
+        match = False
+        for chapter in item['chapters']:
+          if pattern.search(chapter) is not None:
+            match = True
+            break
+        if match:
+          year_items.append(item)
+      elif "tracks" in item:
+        match = False
+        for track in item['tracks']:
+          if pattern.search(track['name']) is not None:
+            match = True
+            break
+        if match:
+          year_items.append(item)
+  
+  print("\n\nItems with a year in their <chapter|title|track> are:")
+  for item in year_items:
+    print(item)
+
+
 if __name__ == "__main__":
   inv = get_inv()
   print_most_expensive_items(inv)
   print_long_cds(inv['cd'])
   print_musical_authors(inv['book'], inv['cd'])
+  print_items_with_years(inv)
