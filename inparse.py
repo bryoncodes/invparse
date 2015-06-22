@@ -66,7 +66,31 @@ def print_long_cds(cds):
     print(cd)
 
 
+def print_musical_authors(books, cds):
+# expects book & cd specific data asprovided by get_inv()
+# prints a list of authors who have also released a cd
+
+  # build list of authors
+  authors=[]
+  for book in books:
+    if book['author'] not in authors:
+      authors.append(book['author'])
+
+  # find authors that have released cds
+  musical_authors = []
+  for author in authors:
+    for cd in cds:
+      if cd['author'] == author:
+        musical_authors.append(author)
+        break
+
+  print("\n\nAuthors who have also released CDs are:")
+  for i in musical_authors:
+    print(i)
+
+
 if __name__ == "__main__":
   inv = get_inv()
   print_most_expensive_items(inv)
   print_long_cds(inv['cd'])
+  print_musical_authors(inv['book'], inv['cd'])
